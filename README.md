@@ -35,6 +35,9 @@ $ yarn install
 ## Running the app
 
 ```bash
+# run docker for postgres db
+$ docker-compose up -d
+
 # development
 $ yarn run start
 
