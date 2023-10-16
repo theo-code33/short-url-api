@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UrlModule } from './url/url.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.POSTGRES_DB,
     }),
     UrlModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
