@@ -1,1 +1,3 @@
-export class CreateUrlDto {}
+export class CreateUrlDto {
+  baseUrl: string;
+}
