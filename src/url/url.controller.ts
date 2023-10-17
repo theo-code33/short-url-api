@@ -8,20 +8,19 @@ import {
   HttpException,
   HttpStatus,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UrlService } from './url.service';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
-import { UserService } from 'src/user/user.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('url')
 export class UrlController {
-  constructor(
-    private readonly urlService: UrlService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly urlService: UrlService) {}
 
   @Post()
+  @UseGuards(AuthGuard('api-key'))
   async create(@Body() createUrlDto: CreateUrlDto) {
     try {
       if (!createUrlDto.baseUrl)
@@ -35,6 +34,8 @@ export class UrlController {
   }
 
   @Get(':slug')
+  @Post()
+  @UseGuards(AuthGuard('api-key'))
   async findOne(@Param('slug') slug: string) {
     try {
       if (!slug)
@@ -61,6 +62,8 @@ export class UrlController {
   }
 
   @Put(':slug')
+  @Post()
+  @UseGuards(AuthGuard('api-key'))
   async update(
     @Param('slug') slug: string,
     @Body() updateUrlDto: UpdateUrlDto,
@@ -79,6 +82,8 @@ export class UrlController {
   }
 
   @Delete(':slug')
+  @Post()
+  @UseGuards(AuthGuard('api-key'))
   remove(@Param('slug') slug: string) {
     try {
       if (!slug)
