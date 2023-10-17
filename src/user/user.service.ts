@@ -38,8 +38,12 @@ export class UserService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOneByEmail(email: string): Promise<UserWithoutPassword> {
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+    }
+    return this.sanitizeUser(user);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
