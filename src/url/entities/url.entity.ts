@@ -15,7 +15,9 @@ export class Url {
   baseUrl: string;
   @Column()
   slug: string;
-  @Column()
+  @Column({
+    default: 0,
+  })
   clicks: number;
   @CreateDateColumn()
   createdAt: Date;

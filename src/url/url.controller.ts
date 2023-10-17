@@ -3,9 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { UrlService } from './url.service';
 import { CreateUrlDto } from './dto/create-url.dto';
@@ -17,26 +19,54 @@ export class UrlController {
 
   @Post()
   create(@Body() createUrlDto: CreateUrlDto) {
-    return this.urlService.create(createUrlDto);
+    try {
+      if (!createUrlDto.baseUrl)
+        throw new HttpException('Url is required', HttpStatus.BAD_REQUEST);
+      return this.urlService.create(createUrlDto);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 
-  @Get()
-  findAll() {
-    return this.urlService.findAll();
+  @Get(':slug')
+  async findOne(@Param('slug') slug: string) {
+    try {
+      if (!slug)
+        throw new HttpException('slug is required', HttpStatus.BAD_REQUEST);
+      const url = await this.urlService.findOne(slug);
+      if (!url) throw new HttpException('Url not found', HttpStatus.NOT_FOUND);
+      return url;
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.urlService.findOne(+id);
+  @Put(':slug')
+  async update(
+    @Param('slug') slug: string,
+    @Body() updateUrlDto: UpdateUrlDto,
+  ) {
+    try {
+      if (!slug)
+        throw new HttpException('Slug is required', HttpStatus.BAD_REQUEST);
+      if (!updateUrlDto.baseUrl)
+        throw new HttpException('Url is required', HttpStatus.BAD_REQUEST);
+      return await this.urlService.update(slug, updateUrlDto).then(() => {
+        return this.urlService.findOne(slug);
+      });
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUrlDto: UpdateUrlDto) {
-    return this.urlService.update(+id, updateUrlDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.urlService.remove(+id);
+  @Delete(':slug')
+  remove(@Param('slug') slug: string) {
+    try {
+      if (!slug)
+        throw new HttpException('Slug is required', HttpStatus.BAD_REQUEST);
+      return this.urlService.remove(slug);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 }
