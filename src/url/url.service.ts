@@ -22,7 +22,13 @@ export class UrlService {
   async findBaseURL(slug: string) {
     const url = await this.urlRepository.findOneBy({ slug });
     if (!url) return null;
+    await this.updateClicks(url);
     return url.baseUrl;
+  }
+
+  async updateClicks(url: Url) {
+    const { baseUrl, clicks } = url;
+    return this.urlRepository.update({ baseUrl }, { clicks: clicks + 1 });
   }
 
   update(slug: string, updateUrlDto: UpdateUrlDto) {
