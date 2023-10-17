@@ -28,7 +28,7 @@ export class UrlController {
         throw new HttpException('Url is required', HttpStatus.BAD_REQUEST);
       if (!createUrlDto.user)
         throw new HttpException('User is required', HttpStatus.BAD_REQUEST);
-      return this.urlService.create({ ...createUrlDto });
+      return this.urlService.create(createUrlDto);
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
