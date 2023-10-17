@@ -12,16 +12,22 @@ import {
 import { UrlService } from './url.service';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
+import { UserService } from 'src/user/user.service';
 
 @Controller('url')
 export class UrlController {
-  constructor(private readonly urlService: UrlService) {}
+  constructor(
+    private readonly urlService: UrlService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
-  create(@Body() createUrlDto: CreateUrlDto) {
+  async create(@Body() createUrlDto: CreateUrlDto) {
     try {
       if (!createUrlDto.baseUrl)
         throw new HttpException('Url is required', HttpStatus.BAD_REQUEST);
+      if (!createUrlDto.user)
+        throw new HttpException('User is required', HttpStatus.BAD_REQUEST);
       return this.urlService.create(createUrlDto);
     } catch (error) {
       throw new HttpException(error.message, error.status);
