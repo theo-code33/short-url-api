@@ -41,6 +41,19 @@ export class UrlController {
     }
   }
 
+  @Get(':slug/baseUrl')
+  async findBaseURL(@Param('slug') slug: string) {
+    try {
+      if (!slug)
+        throw new HttpException('Slug is required', HttpStatus.BAD_REQUEST);
+      const url = await this.urlService.findBaseURL(slug);
+      if (!url) throw new HttpException('Url not found', HttpStatus.NOT_FOUND);
+      return url;
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
   @Put(':slug')
   async update(
     @Param('slug') slug: string,
