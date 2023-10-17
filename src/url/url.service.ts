@@ -19,6 +19,12 @@ export class UrlService {
     return this.urlRepository.findOneBy({ slug });
   }
 
+  async findBaseURL(slug: string) {
+    const url = await this.urlRepository.findOneBy({ slug });
+    if (!url) return null;
+    return url.baseUrl;
+  }
+
   update(slug: string, updateUrlDto: UpdateUrlDto) {
     return this.urlRepository.update({ slug }, updateUrlDto);
   }
