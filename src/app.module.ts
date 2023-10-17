@@ -4,6 +4,9 @@ import { AppService } from './app.service';
 import { UrlModule } from './url/url.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { User } from './user/entities/user.entity';
 import { Url } from './url/entities/url.entity';
 
 @Module({
@@ -16,10 +19,12 @@ import { Url } from './url/entities/url.entity';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [Url],
+      entities: [User, Url],
       synchronize: true,
     }),
     UrlModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
