@@ -26,7 +26,7 @@ export class UserService {
 
     const user = await this.userRepository.findOne({
       where: { email },
-      relations: ['urls'],
+      relations: ['urls', 'apiKeys'],
     });
 
     if (!user) {
@@ -44,7 +44,7 @@ export class UserService {
   async findOne(id: number): Promise<UserWithoutPassword> {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['urls'],
+      relations: ['urls', 'apiKeys'],
     });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
@@ -55,12 +55,17 @@ export class UserService {
   async findOneByEmail(email: string): Promise<UserWithoutPassword> {
     const user = await this.userRepository.findOne({
       where: { email },
-      relations: ['urls'],
+      relations: ['urls', 'apiKeys'],
     });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
     }
     return this.sanitizeUser(user);
+  }
+
+  async findByPayload(payload: any): Promise<UserWithoutPassword> {
+    const { email } = payload;
+    return await this.findOneByEmail(email);
   }
 
   // TODO - add update and delete methods
