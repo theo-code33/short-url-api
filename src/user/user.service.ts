@@ -46,6 +46,7 @@ export class UserService {
     return this.sanitizeUser(user);
   }
 
+  // TODO - add update and delete methods
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
