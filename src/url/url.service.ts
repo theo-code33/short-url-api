@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Url } from './entities/url.entity';
 import { Repository } from 'typeorm';
 import { generateUID } from 'src/utils/nanoid';
+import { CreateUrlDto } from './dto/create-url.dto';
 
 @Injectable()
 export class UrlService {
@@ -16,7 +16,7 @@ export class UrlService {
   }
 
   findOne(slug: string) {
-    return this.urlRepository.findOneBy({ slug });
+    return this.urlRepository.findOne({ where: { slug }, relations: ['user'] });
   }
 
   async findBaseURL(slug: string) {

@@ -1,8 +1,11 @@
+import { UserWithoutPassword } from 'src/types/user';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -19,6 +22,10 @@ export class Url {
     default: 0,
   })
   clicks: number;
+  @ManyToOne(() => User, (user) => user.id, {
+    cascade: true,
+  })
+  user: UserWithoutPassword;
   @CreateDateColumn()
   createdAt: Date;
   @UpdateDateColumn()

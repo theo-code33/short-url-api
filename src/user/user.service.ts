@@ -24,7 +24,10 @@ export class UserService {
   async findByLogin(UserDto: LoginDto): Promise<UserWithoutPassword> {
     const { email, password } = UserDto;
 
-    const user = await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: ['urls'],
+    });
 
     if (!user) {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
@@ -38,8 +41,22 @@ export class UserService {
     }
   }
 
+  async findOne(id: number): Promise<UserWithoutPassword> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['urls'],
+    });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+    }
+    return this.sanitizeUser(user);
+  }
+
   async findOneByEmail(email: string): Promise<UserWithoutPassword> {
-    const user = await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: ['urls'],
+    });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
     }
