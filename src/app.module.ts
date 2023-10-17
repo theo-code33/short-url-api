@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UrlModule } from './url/url.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { Url } from './url/entities/url.entity';
 
 @Module({
   imports: [
@@ -15,6 +16,8 @@ import { ConfigModule } from '@nestjs/config';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
+      entities: [Url],
+      synchronize: true,
     }),
     UrlModule,
   ],
