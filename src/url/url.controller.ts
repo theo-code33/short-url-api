@@ -20,7 +20,7 @@ export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
   @Post()
-  @UseGuards(AuthGuard('api-key'))
+  @UseGuards(AuthGuard(['api-key', 'auth']))
   async create(@Body() createUrlDto: CreateUrlDto) {
     try {
       if (!createUrlDto.baseUrl)
@@ -35,7 +35,7 @@ export class UrlController {
 
   @Get(':slug')
   @Post()
-  @UseGuards(AuthGuard('api-key'))
+  @UseGuards(AuthGuard(['api-key', 'auth']))
   async findOne(@Param('slug') slug: string) {
     try {
       if (!slug)
@@ -63,7 +63,7 @@ export class UrlController {
 
   @Put(':slug')
   @Post()
-  @UseGuards(AuthGuard('api-key'))
+  @UseGuards(AuthGuard(['api-key', 'auth']))
   async update(
     @Param('slug') slug: string,
     @Body() updateUrlDto: UpdateUrlDto,
@@ -83,7 +83,7 @@ export class UrlController {
 
   @Delete(':slug')
   @Post()
-  @UseGuards(AuthGuard('api-key'))
+  @UseGuards(AuthGuard(['api-key', 'auth']))
   remove(@Param('slug') slug: string) {
     try {
       if (!slug)
