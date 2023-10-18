@@ -5,6 +5,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ApiKeyService } from './api-key.service';
 import { CreateApiKeyDto } from './dto/create-api-key.dto';
@@ -17,12 +19,23 @@ export class ApiKeyController {
   @Post()
   @UseGuards(AuthGuard('auth'))
   create(@Body() createApiKeyDto: CreateApiKeyDto) {
-    return this.apiKeyService.create(createApiKeyDto);
+    try {
+      if (!createApiKeyDto.user)
+        throw new HttpException('User required', HttpStatus.BAD_REQUEST);
+      return this.apiKeyService.create(createApiKeyDto);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('auth'))
   remove(@Param('id') id: string) {
-    return this.apiKeyService.remove(+id);
+    try {
+      if (!id) throw new HttpException('Id required', HttpStatus.BAD_REQUEST);
+      return this.apiKeyService.remove(+id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 }
