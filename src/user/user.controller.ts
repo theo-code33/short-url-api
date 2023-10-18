@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -26,8 +27,8 @@ export class UserController {
     }
   }
 
-  @Get(':email')
-  findOne(@Param('email') email: string) {
+  @Get()
+  findOne(@Query('email') email: string) {
     try {
       if (!email)
         throw new HttpException('Email is required', HttpStatus.BAD_REQUEST);
