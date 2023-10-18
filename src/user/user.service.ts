@@ -68,9 +68,17 @@ export class UserService {
     return await this.findOneByEmail(email);
   }
 
-  // TODO - add update and delete methods
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    await this.userRepository.update(id, updateUserDto);
+
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['urls', 'apiKeys'],
+    });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+    }
+    return this.sanitizeUser(user);
   }
 
   remove(id: number) {
