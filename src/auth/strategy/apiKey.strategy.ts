@@ -15,7 +15,7 @@ export class ApiKeyStrategy extends PassportStrategy(Strategy, 'api-key') {
     const apiKeyResponse = await this.apiKeyService.findByKey(apiKey);
     if (!apiKeyResponse) {
       return done(
-        new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED),
+        new HttpException('Invalid Api Key', HttpStatus.UNAUTHORIZED),
         null,
       );
     }
