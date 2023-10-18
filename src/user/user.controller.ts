@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,21 +19,41 @@ export class UserController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+    try {
+      return this.userService.create(createUserDto);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 
   @Get(':email')
   findOne(@Param('email') email: string) {
-    return this.userService.findOneByEmail(email);
+    try {
+      if (!email)
+        throw new HttpException('Email is required', HttpStatus.BAD_REQUEST);
+      return this.userService.findOneByEmail(email);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+    try {
+      return this.userService.update(+id, updateUserDto);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    try {
+      if (!id)
+        throw new HttpException('Id is required', HttpStatus.BAD_REQUEST);
+      return this.userService.remove(+id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
   }
 }
