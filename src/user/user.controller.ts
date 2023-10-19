@@ -9,10 +9,12 @@ import {
   Query,
   HttpException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
@@ -64,6 +66,7 @@ export class UserController {
   @ApiInternalServerErrorResponse({
     description: 'Internal Server Error',
   })
+  @UseGuards(AuthGuard(['auth']))
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {
       return this.userService.update(+id, updateUserDto);
