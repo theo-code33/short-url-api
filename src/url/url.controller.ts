@@ -21,7 +21,9 @@ import {
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Url } from './entities/url.entity';
 
 @ApiTags('url')
 @ApiBearerAuth()
@@ -32,8 +34,11 @@ export class UrlController {
 
   @Post()
   @ApiCreatedResponse({
-    type: CreateUrlDto,
+    type: Url,
     description: 'Url has been created succesfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
@@ -53,8 +58,11 @@ export class UrlController {
 
   @Get(':slug')
   @ApiOkResponse({
-    type: CreateUrlDto,
+    type: Url,
     description: 'Url has been found',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
@@ -94,8 +102,10 @@ export class UrlController {
 
   @Put(':slug')
   @ApiOkResponse({
-    type: UpdateUrlDto,
     description: 'Url has been updated succesfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
@@ -121,6 +131,9 @@ export class UrlController {
   @Delete(':slug')
   @ApiOkResponse({
     description: 'Url has been deleted succesfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
