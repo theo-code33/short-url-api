@@ -10,8 +10,13 @@ import { CreateUrlDto } from './dto/create-url.dto';
 export class UrlService {
   constructor(@InjectRepository(Url) private urlRepository: Repository<Url>) {}
 
-  create(createUrlDto: CreateUrlDto) {
-    const slug = generateUID();
+  async create(createUrlDto: CreateUrlDto) {
+    let slug: string;
+    let existingUrlWithSlug: Url;
+    do {
+      slug = generateUID();
+      existingUrlWithSlug = await this.findOne(slug);
+    } while (existingUrlWithSlug);
     return this.urlRepository.save({ ...createUrlDto, slug });
   }
 
