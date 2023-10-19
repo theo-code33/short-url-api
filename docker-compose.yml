@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  postgres:
+  db:
     image: postgres
     ports:
       - 5432:5432
@@ -11,6 +11,21 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - api
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: nestjs-docker:0.0.1
+    ports:
+      - 80:8000
+    networks:
+      - api
+    depends_on:
+      - db
+    env_file:
+      - .env
   adminer:
     image: adminer
     restart: always
@@ -18,3 +33,6 @@ services:
       - 8080:8080
     environment:
       - ADMINER_DEFAULT_SERVER=postgres
+networks:
+  api:
+    driver: bridge

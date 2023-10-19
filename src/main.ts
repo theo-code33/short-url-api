@@ -34,7 +34,7 @@ async function bootstrap() {
   };
   const document = SwaggerModule.createDocument(app, config, options);
   SwaggerModule.setup('documentation', app, document);
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'production') {
     const configDev = new DocumentBuilder()
       .setTitle('Shortener URL API - Development')
       .setDescription(
