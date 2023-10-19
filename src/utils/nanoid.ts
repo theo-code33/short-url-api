@@ -8,7 +8,7 @@ import { customAlphabet } from 'nanoid';
  */
 export const generateUID = () => {
   const nanoid = customAlphabet(
-    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ;,?:@&=+$-_.!~*()#',
     5,
   );
   return nanoid();
