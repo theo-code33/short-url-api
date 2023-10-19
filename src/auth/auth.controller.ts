@@ -9,7 +9,14 @@ import { AuthService } from './auth.service';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginDto } from './dto/login-dto';
+import {
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -18,6 +25,12 @@ export class AuthController {
   ) {}
 
   @Post('register')
+  @ApiOkResponse({
+    description: 'The user has been successfully registered.',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+  })
   async register(@Body() createUserDto: CreateUserDto) {
     try {
       const user = await this.userService.create(createUserDto);
@@ -32,6 +45,15 @@ export class AuthController {
   }
 
   @Post('login')
+  @ApiOkResponse({
+    description: 'The user has been successfully logged in.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+  })
   async login(@Body() loginDTO: LoginDto) {
     try {
       const user = await this.userService.findByLogin(loginDTO);
