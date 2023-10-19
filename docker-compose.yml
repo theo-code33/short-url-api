@@ -14,7 +14,7 @@ services:
     networks:
       - api
   api:
-    image: theodev33/nestjs-docker
+    image: theodev33/nestjs-docker:0.0.2
     ports:
       - 8000:8000
     networks:
