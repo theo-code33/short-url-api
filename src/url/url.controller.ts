@@ -7,8 +7,8 @@ import {
   Delete,
   HttpException,
   HttpStatus,
-  Put,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { UrlService } from './url.service';
 import { CreateUrlDto } from './dto/create-url.dto';
@@ -100,7 +100,7 @@ export class UrlController {
     }
   }
 
-  @Put(':slug')
+  @Patch(':slug')
   @ApiOkResponse({
     description: 'Url has been updated succesfully',
   })
