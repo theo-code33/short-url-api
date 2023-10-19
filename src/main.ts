@@ -4,7 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { UrlModule } from './url/url.module';
 
 const VERSION = '0.9';
-const PORT = 3001;
+const PORT = 8000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -27,6 +27,7 @@ async function bootstrap() {
 
   const options = {
     include: [UrlModule],
+    ignoreGlobalPrefix: true,
   };
   const document = SwaggerModule.createDocument(app, config, options);
   SwaggerModule.setup('documentation', app, document);
@@ -49,7 +50,11 @@ async function bootstrap() {
       })
       .build();
 
-    const documentDev = SwaggerModule.createDocument(app, configDev);
+    const options = {
+      ignoreGlobalPrefix: true,
+    };
+
+    const documentDev = SwaggerModule.createDocument(app, configDev, options);
     SwaggerModule.setup('documentation-dev', app, documentDev);
   }
 
