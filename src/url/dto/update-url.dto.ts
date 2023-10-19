@@ -6,10 +6,10 @@ export class UpdateUrlDto extends PartialType(
   OmitType(CreateUrlDto, ['user']),
 ) {
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
     description: 'Base URL',
     example: 'https://www.google.com',
   })
-  baseUrl?: string;
+  baseUrl: string;
 }
