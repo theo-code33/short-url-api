@@ -9,6 +9,10 @@
 
 To use API and create shorten url you need to register and login. After that you can create api key and use it to create shorten url. To use api key you need to add it to header as `x-api-key` and send it with request.
 
+## Documentation
+
+We use swagger to document API. You can find it under `/documentation` route for official doc and under `/documentation-dev` for development doc.
+
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>

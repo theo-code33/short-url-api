@@ -14,12 +14,35 @@ import { UrlService } from './url.service';
 import { CreateUrlDto } from './dto/create-url.dto';
 import { UpdateUrlDto } from './dto/update-url.dto';
 import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiSecurity,
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { Url } from './entities/url.entity';
 
+@ApiTags('url')
+@ApiBearerAuth()
+@ApiSecurity('x-api-key')
 @Controller('url')
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
   @Post()
+  @ApiCreatedResponse({
+    type: Url,
+    description: 'Url has been created succesfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
   @UseGuards(AuthGuard(['api-key', 'auth']))
   async create(@Body() createUrlDto: CreateUrlDto) {
     try {
@@ -34,7 +57,16 @@ export class UrlController {
   }
 
   @Get(':slug')
-  @Post()
+  @ApiOkResponse({
+    type: Url,
+    description: 'Url has been found',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
   @UseGuards(AuthGuard(['api-key', 'auth']))
   async findOne(@Param('slug') slug: string) {
     try {
@@ -49,6 +81,13 @@ export class UrlController {
   }
 
   @Get(':slug/baseUrl')
+  @ApiOkResponse({
+    type: String,
+    description: 'Url has been found',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
   async findBaseURL(@Param('slug') slug: string) {
     try {
       if (!slug)
@@ -62,7 +101,15 @@ export class UrlController {
   }
 
   @Put(':slug')
-  @Post()
+  @ApiOkResponse({
+    description: 'Url has been updated succesfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
   @UseGuards(AuthGuard(['api-key', 'auth']))
   async update(
     @Param('slug') slug: string,
@@ -82,7 +129,15 @@ export class UrlController {
   }
 
   @Delete(':slug')
-  @Post()
+  @ApiOkResponse({
+    description: 'Url has been deleted succesfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
   @UseGuards(AuthGuard(['api-key', 'auth']))
   remove(@Param('slug') slug: string) {
     try {
