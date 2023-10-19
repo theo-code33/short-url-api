@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { UrlModule } from './url/url.module';
+import { ValidationPipe } from '@nestjs/common';
 
 const VERSION = '0.9';
 const PORT = 8000;
@@ -11,6 +12,8 @@ async function bootstrap() {
   app.setGlobalPrefix('/api/v0', {
     exclude: ['documentation', 'documentation-dev'],
   });
+  app.useGlobalPipes(new ValidationPipe());
+
   const config = new DocumentBuilder()
     .setTitle('Shortener URL API')
     .setDescription(
