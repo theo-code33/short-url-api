@@ -9,6 +9,7 @@ import {
   HttpStatus,
   UseGuards,
   Patch,
+  Req,
 } from '@nestjs/common';
 import { UrlService } from './url.service';
 import { CreateUrlDto } from './dto/create-url.dto';
@@ -24,13 +25,20 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Url } from './entities/url.entity';
-
+import { ApiKeyService } from 'src/api-key/api-key.service';
+import jwt_decode from 'jwt-decode';
+import { UserService } from 'src/user/user.service';
+import { UserWithoutPassword } from 'src/types/user';
 @ApiTags('url')
 @ApiBearerAuth()
 @ApiSecurity('x-api-key')
 @Controller('url')
 export class UrlController {
-  constructor(private readonly urlService: UrlService) {}
+  constructor(
+    private readonly urlService: UrlService,
+    private readonly apiKeyService: ApiKeyService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
   @ApiCreatedResponse({
@@ -44,13 +52,28 @@ export class UrlController {
     description: 'Internal server error',
   })
   @UseGuards(AuthGuard(['api-key', 'auth']))
-  async create(@Body() createUrlDto: CreateUrlDto) {
+  async create(
+    @Body() createUrlDto: Omit<CreateUrlDto, 'user'>,
+    @Req() req: Request,
+  ) {
     try {
+      if (!req.headers['x-api-key'] && !req.headers['authorization'])
+        throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+      let user: UserWithoutPassword | null = null;
+      if (req.headers['x-api-key']) {
+        const apiKey = req.headers['x-api-key'].toString();
+        user = await this.apiKeyService.findUserByApiKey(apiKey);
+      }
+      if (req.headers['authorization']) {
+        const jwt = req.headers['authorization']
+          .toString()
+          .replace('Bearer ', '');
+        const payload = jwt_decode(jwt);
+        user = await this.userService.findByPayload(payload);
+      }
       if (!createUrlDto.baseUrl)
         throw new HttpException('Url is required', HttpStatus.BAD_REQUEST);
-      if (!createUrlDto.user)
-        throw new HttpException('User is required', HttpStatus.BAD_REQUEST);
-      return this.urlService.create(createUrlDto);
+      return this.urlService.create({ ...createUrlDto, user });
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
