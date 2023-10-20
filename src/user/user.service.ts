@@ -18,8 +18,6 @@ export class UserService {
     const hash = await bcrypt.hash(createUserDto.password, 10);
     createUserDto.password = hash;
     const createdUser = await this.userRepository.save(createUserDto);
-    console.log('hello');
-
     return this.sanitizeUser(createdUser);
   }
 
