@@ -1,15 +1,14 @@
 import {
   Controller,
   Post,
-  Body,
   Param,
   Delete,
   UseGuards,
   HttpException,
   HttpStatus,
+  Req,
 } from '@nestjs/common';
 import { ApiKeyService } from './api-key.service';
-import { CreateApiKeyDto } from './dto/create-api-key.dto';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiCreatedResponse,
@@ -18,10 +17,17 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import { UserService } from 'src/user/user.service';
+import jwtDecode from 'jwt-decode';
+import { Payload } from 'src/types/auth';
+
 @ApiTags('api-key')
 @Controller('api-key')
 export class ApiKeyController {
-  constructor(private readonly apiKeyService: ApiKeyService) {}
+  constructor(
+    private readonly apiKeyService: ApiKeyService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
   @ApiCreatedResponse({
@@ -31,11 +37,15 @@ export class ApiKeyController {
     description: 'Internal Server Error',
   })
   @UseGuards(AuthGuard('auth'))
-  create(@Body() createApiKeyDto: CreateApiKeyDto) {
+  async create(@Req() req: Request) {
     try {
-      if (!createApiKeyDto.user)
+      if (!req.headers['authorization'])
         throw new HttpException('User required', HttpStatus.BAD_REQUEST);
-      return this.apiKeyService.create(createApiKeyDto);
+      const payload = jwtDecode<Payload>(req.headers['authorization']);
+      const user = await this.userService.findByPayload(payload);
+      return this.apiKeyService.create({
+        user,
+      });
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
