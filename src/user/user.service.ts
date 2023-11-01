@@ -7,6 +7,7 @@ import { User } from './entities/user.entity';
 import { UserWithoutPassword } from 'src/types/user';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginDto } from 'src/auth/dto/login-dto';
+import { Payload } from 'src/types/auth';
 
 @Injectable()
 export class UserService {
@@ -63,7 +64,7 @@ export class UserService {
     return this.sanitizeUser(user);
   }
 
-  async findByPayload(payload: any): Promise<UserWithoutPassword> {
+  async findByPayload(payload: Payload): Promise<UserWithoutPassword> {
     const { email } = payload;
     return await this.findOneByEmail(email);
   }
