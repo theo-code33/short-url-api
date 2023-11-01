@@ -26,9 +26,10 @@ import {
 } from '@nestjs/swagger';
 import { Url } from './entities/url.entity';
 import { ApiKeyService } from 'src/api-key/api-key.service';
-import jwt_decode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import { UserService } from 'src/user/user.service';
 import { UserWithoutPassword } from 'src/types/user';
+import { Payload } from 'src/types/auth';
 @ApiTags('url')
 @ApiBearerAuth()
 @ApiSecurity('x-api-key')
@@ -65,10 +66,7 @@ export class UrlController {
         user = await this.apiKeyService.findUserByApiKey(apiKey);
       }
       if (req.headers['authorization']) {
-        const jwt = req.headers['authorization']
-          .toString()
-          .replace('Bearer ', '');
-        const payload = jwt_decode(jwt);
+        const payload = jwtDecode<Payload>(req.headers['authorization']);
         user = await this.userService.findByPayload(payload);
       }
       if (!createUrlDto.baseUrl)

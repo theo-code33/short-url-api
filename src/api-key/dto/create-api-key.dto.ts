@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/user/entities/user.entity';
+import { UserWithoutPassword } from 'src/types/user';
 
 export class CreateApiKeyDto {
   @ApiProperty({
@@ -7,5 +7,5 @@ export class CreateApiKeyDto {
     description: 'User ID',
     example: 1,
   })
-  user: User;
+  user: UserWithoutPassword;
 }
