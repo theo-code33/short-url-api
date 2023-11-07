@@ -18,7 +18,7 @@ import { ApiKeyModule } from './api-key/api-key.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      // host: 'db',
+      host: process.env.NODE_ENV === 'production' ? 'db' : 'localhost',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
