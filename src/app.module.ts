@@ -6,10 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { User } from './user/entities/user.entity';
-import { Url } from './url/entities/url.entity';
 import { ApiKeyModule } from './api-key/api-key.module';
-import { ApiKey } from './api-key/entities/api-key.entity';
 
 @Module({
   imports: [
@@ -22,7 +19,7 @@ import { ApiKey } from './api-key/entities/api-key.entity';
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
       // host: 'db',
-      entities: [User, Url, ApiKey],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     UrlModule,
